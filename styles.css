@@ -1,0 +1,50 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+}
+
+body {
+  background-color: rgb(40, 40, 40);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.add-sticky-note {
+  background-color: rgb(100, 100, 100);
+  font-weight: bold;
+  color: white;
+  border: none;
+  padding: 1em;
+  margin: 1.5em;
+  border-radius: 5px;
+  width: 150px;
+  cursor: pointer;
+  transition: transform .5s;
+}
+
+.add-sticky-note:hover {
+  transform: scale(1.012);
+}
+
+dialog[open] {
+  margin: auto;
+  height: 85vh;
+  width: 95vw;
+  background-color: rgb(45, 45, 45);
+  border: none;
+  border-radius: 8px;
+}
+
+.close-modal {
+  filter: invert(0.825);
+  height: 30px;
+  cursor: pointer;
+}
+
+.modal-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1em;
+}
