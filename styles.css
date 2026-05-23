@@ -11,12 +11,12 @@ body {
 }
 
 .add-sticky-note {
-  background-color: rgb(100, 100, 100);
+  background-color: rgb(30, 30, 30);
   font-weight: bold;
   color: white;
   border: none;
   padding: 1em;
-  margin: 1.5em;
+  margin: 3em 3em 0;
   border-radius: 5px;
   width: 150px;
   cursor: pointer;
@@ -29,7 +29,7 @@ body {
 
 dialog[open] {
   margin: auto;
-  height: 85vh;
+  height: 90vh;
   width: 95vw;
   background-color: rgb(45, 45, 45);
   border: none;
@@ -40,11 +40,64 @@ dialog[open] {
   filter: invert(0.825);
   height: 30px;
   cursor: pointer;
+  margin: 1em 1em 0 0;
 }
 
 .modal-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 2.5em;
+}
+
+input, .description {
+  border: none;
+  outline: none;
+  background-color: rgb(45, 45, 45);
+  width: 90vw;
+}
+
+textarea {
+  resize: none;
+}
+
+.description {
+  color-scheme: dark;
+  font-size: 1.5em;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 1em;
+}
+
+.submit {
+  background-color: rgb(40, 40, 40);
+  border: none;
+  padding: 1em;
+  width: 90vw;
+  margin-top: 3em;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+form {
+  margin-left: 2em;
+}
+
+.notes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+  margin-left: 1.5em;
+  margin-top: 2em;
+}
+
+.card {
+  gap: 1em;
+  background-color: rgb(30, 30, 30);
+  padding: 2em;
+  border-radius: 10px;
   margin: 1em;
 }
