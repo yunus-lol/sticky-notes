@@ -1,12 +1,13 @@
 let notes = [];
+let currentCard = 0;
 
 const notesContainer = document.querySelector(".notes-container");
 const addStickyNote = document.querySelector(".add-sticky-note");
 const addNoteModal = document.querySelector(".add-note-modal");
 const closeModal = document.querySelector(".close-modal");
-const submitButton = document.querySelector(".submit")
-const cardTitle = document.querySelector(".title");
-const cardInfo = document.querySelector(".description");
+const submitButton = document.querySelector(".submit");
+const title = document.querySelector(".title");
+const description = document.querySelector(".description");
 
 class Note {
   constructor(title, info) {
@@ -21,35 +22,81 @@ function addNoteToNotes(title, info) {
   displayNotes();
 }
 
+function handleText(text) {
+  return text.length > 20 ? text.slice(0, 20) + "..." : text;
+}
+
+function saveNotes() {
+  localStorage.setItem("data", JSON.stringify(notes));
+}
+
+function loadNotes() {
+  let arr = localStorage.getItem("data");
+  arr ? notes = JSON.parse(arr) : [];
+}
+
 function displayNotes() {
-  notesContainer.innerHTML = ""
+  notesContainer.innerHTML = "";
+
   notes.forEach(note => {
     const card = document.createElement("div");
-    card.classList.add("card")
+    card.classList.add("card");
+
+    const image = document.createElement("img");
+    image.src = "./trash.jpg";
+    image.classList.add("delete-icon");
+
     card.innerHTML = `
-      <h2>${note.title}</h2>
-      <p>${note.info}</p>
+      <div class="text">
+        <h2 class="card-title">${handleText(note.title)}</h2>
+        <p class="card-description">${handleText(note.info)}</p>
+      </div>
+      <div class="images"></div>
     `;
-    notesContainer.appendChild(card)
+
+    const index = notes.indexOf(note);
+    const text = card.querySelector(".text")
+
+    text.addEventListener("click", () => {
+      addNoteModal.showModal();
+      title.value = notes[index].title;
+      description.value = notes[index].info;
+      currentCard = index;
+    });
+
+    image.addEventListener("click", () => {
+      notes.splice(index, 1);
+      displayNotes();
+    });
+
+    const imagesSection = card.querySelector(".images");
+    imagesSection.appendChild(image);
+    notesContainer.appendChild(card);
   });
 }
 
 addStickyNote.addEventListener("click", () => {
   addNoteModal.showModal();
-  cardTitle.value = "";
-  cardInfo.value = "";
+  title.value = "";
+  description.value = "";
 });
 
 closeModal.addEventListener("click", () => addNoteModal.close());
 
 submitButton.addEventListener("click", (event) => {
+  console.log(currentCard)
   event.preventDefault();
-  const title = cardTitle.value;
-  const info = cardInfo.value;
-  addNoteToNotes(title, info)
+  if (notes.indexOf(notes[currentCard])) {
+    notes.splice(currentCard, 1, new Note(title.value, description.value));
+  } else {
+    addNoteToNotes(title.value, description.value);
+  }
+
   displayNotes();
   addNoteModal.close();
 });
 
-addNoteToNotes("hello", "this is information")
-addNoteToNotes("Get Food", "woooooooooooooooooooo")
+addNoteToNotes("hellohellohellohellohello", "this is information");
+addNoteToNotes("Get Food", "burger");
+addNoteToNotes("Get Food", "chips");
+addNoteToNotes("Get Food", "chicken");
