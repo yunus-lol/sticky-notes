@@ -1,5 +1,7 @@
 let notes = [];
-let currentCard = 0;
+let currentCard = null;
+let editMode = false;
+let draggedIndex = null;
 
 const notesContainer = document.querySelector(".notes-container");
 const addStickyNote = document.querySelector(".add-sticky-note");
@@ -19,6 +21,7 @@ class Note {
 function addNoteToNotes(title, info) {
   const note = new Note(title, info);
   notes.push(note);
+  saveNotes();
   displayNotes();
 }
 
@@ -38,9 +41,10 @@ function loadNotes() {
 function displayNotes() {
   notesContainer.innerHTML = "";
 
-  notes.forEach(note => {
+  notes.forEach((note, index) => {
     const card = document.createElement("div");
     card.classList.add("card");
+    card.draggable = true;
 
     const image = document.createElement("img");
     image.src = "./trash.jpg";
@@ -54,18 +58,34 @@ function displayNotes() {
       <div class="images"></div>
     `;
 
-    const index = notes.indexOf(note);
-    const text = card.querySelector(".text")
+    const text = card.querySelector(".text");
 
     text.addEventListener("click", () => {
       addNoteModal.showModal();
+
       title.value = notes[index].title;
       description.value = notes[index].info;
+
       currentCard = index;
+      editMode = true;
     });
 
     image.addEventListener("click", () => {
       notes.splice(index, 1);
+      saveNotes();
+      displayNotes();
+    });
+
+    card.addEventListener("dragstart", () => draggedIndex = index);
+    card.addEventListener("dragover", (event) => event.preventDefault());
+
+    card.addEventListener("drop", () => {
+      const draggedItem = notes[draggedIndex];
+
+      notes.splice(draggedIndex, 1);
+      notes.splice(index, 0, draggedItem);
+
+      saveNotes();
       displayNotes();
     });
 
@@ -84,19 +104,20 @@ addStickyNote.addEventListener("click", () => {
 closeModal.addEventListener("click", () => addNoteModal.close());
 
 submitButton.addEventListener("click", (event) => {
-  console.log(currentCard)
   event.preventDefault();
-  if (notes.indexOf(notes[currentCard])) {
+  if (editMode) {
     notes.splice(currentCard, 1, new Note(title.value, description.value));
+    saveNotes();
   } else {
     addNoteToNotes(title.value, description.value);
   }
 
+  editMode = false;
+
+  saveNotes();
   displayNotes();
   addNoteModal.close();
 });
 
-addNoteToNotes("hellohellohellohellohello", "this is information");
-addNoteToNotes("Get Food", "burger");
-addNoteToNotes("Get Food", "chips");
-addNoteToNotes("Get Food", "chicken");
+loadNotes();
+displayNotes();
